@@ -13,6 +13,7 @@ class Student:
         self.stu_id = stu_id
         self.phone = phone
         self.level = level
+        self.time = ""
 
 def save_checkin(course, stus):
     fptr = open(folder_path + "/" + str(date.today()), "w", encoding="utf-8")
@@ -20,21 +21,21 @@ def save_checkin(course, stus):
     normal_count = 0
     for stu in stus:
         if stu.level == course:
-            fptr.write(stu.name + "\t\t" + str(datetime.now()) + "\t\t本日社員\n")
+            fptr.write(stu.name + "\t\t" + stu.time + "\t\t本日社員\n")
         elif stu.level == "normal":
             normal_count += 1
-            fptr.write(stu.name + "\t\t" + str(datetime.now()) + "\t\t一般社員\n")
+            fptr.write(stu.name + "\t\t" + stu.time + "\t\t一般社員\n")
         elif stu.level == "staff":
-            fptr.write(stu.name + "\t\t" + str(datetime.now()) + "\t\t工作人員\n")
+            fptr.write(stu.name + "\t\t" + stu.time + "\t\t工作人員\n")
         else:
-            fptr.write(stu.name + "\t\t" + str(datetime.now()) + "\t\t補課社員\n")
+            fptr.write(stu.name + "\t\t" + stu.time + "\t\t補課社員\n")
     
     fptr.write("==========================\n")
     fptr.write("一般社員：" + str(normal_count) + "\n")
     fptr.close()
     return True
 
-def display_absence(course_stulist ,checked, stu_list):
+def display_absence(course_stulist , checked, stu_list):
     absences = list(set(course_stulist).difference(set(checked)))
     fptr = open(folder_path + "/" + str(date.today()), "a", encoding="utf-8")
     fptr.write("==========================\n")
@@ -92,7 +93,15 @@ print("輸入0則程式結束")
 print("=================================")
 print("社課代碼")
 print("py-3\t\tpy-5\t\tla")
-course = input("請輸入課程代碼： ")
+
+course = ""
+while True:
+    course = input("請輸入課程代碼： ").strip()
+    if course not in ["py-3","py-5","la"]:
+        print("輸入錯誤，查無此課程代碼。")
+    else:
+        break
+
 checked = []
 checked_stuid = []
 normal_count = 0
@@ -115,6 +124,7 @@ while True:
             flag = False
     
     if flag:
+        stu.time = str(datetime.now())
         checked.append(stu)
         checked_stuid.append(stu.stu_id)
 
