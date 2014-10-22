@@ -35,27 +35,17 @@ def save_checkin(course, stus):
     fptr.close()
     return True
 
-def display_absence(course_stulist , checked, stu_list):
+def get_absence(course_stulist , checked, stu_list):
+    result = []
     absences = list(set(course_stulist).difference(set(checked)))
     fptr = open(folder_path + "/" + str(date.today()), "a", encoding="utf-8")
     fptr.write("==========================\n")
     fptr.write("未到社員：\n")
     for absence_stu in absences:
-        stu = is_this_course_stu(absence_stu, stu_list)
+        stu = [stu_ for stu_ in stu_list if stu_.stu_id in absence_stu][0]
         fptr.write(stu.name + "\t\t" + stu.phone + "\n")    
-        print(stu.name)
+        result.append(stu.name)
     fptr.close()
-
-def is_this_course_stu(stuid, stu_list):
-    for stu in stu_list:
-        if stu.stu_id == stuid:
-            return stu
-
-def get_course_stulist(stulist, course):
-    result = []
-    for stu in stulist:
-        if stu.level == course:
-            result.append(stu.stu_id)
     return result
 
 def init_Student():
@@ -75,10 +65,11 @@ def init_Student():
     return result
 def exit_shell():
     save_checkin(course, checked)
-    course_stulist = get_course_stulist(stu_list, course)
+    course_stulist = [stu.stu_id for stu in stu_list if stu.level == course]
+    absence = get_absence(course_stulist, checked_stuid, stu_list)
     print("=================================")
-    print("未到社員：")
-    display_absence(course_stulist, checked_stuid, stu_list)
+    print("未到社員：", len(absence), "人")
+    print("\n".join(absence))
 
 atexit.register(exit_shell)
 stu_list = init_Student()
@@ -141,5 +132,3 @@ while True:
         print("查無此人！")
 
     print("=================================")
-
-
