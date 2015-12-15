@@ -83,12 +83,12 @@ print("校友與校外學生請輸入電話或學號")
 print("輸入0則程式結束")
 print("=================================")
 print("社課代碼")
-print("py-3\t\tpy-5\t\tla")
+print("scratch")
 
 course = ""
 while True:
     course = input("請輸入課程代碼： ").strip()
-    if course not in ["py-3","py-5","la"]:
+    if course not in ["scratch"]:
         print("輸入錯誤，查無此課程代碼。")
     else:
         break
